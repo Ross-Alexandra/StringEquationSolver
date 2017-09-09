@@ -42,6 +42,12 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 		if verbose:
 			print('\n{')
 
+		#: If nested parenthesis exist, find the outermost closing curly brace..
+		i = 0
+		while '(' in eqt[open_par + 1: close_par] and ')' not in eqt[open_par + 1: close_par]:
+			i += 1
+			close_par = eqt.index(')', i)
+
 		#: Black magic of recursion.
 		#: Replace the chunk of the list containing the bracketed section
 		#: With the outcome of the chunk within brackets by recursively
@@ -73,6 +79,12 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 		if verbose:
 			print("\n[")
 
+		#: If nested square brackets exist, find the outermost closing square bracket.
+		i = 0
+		while '[' in eqt[open_sq + 1: close_sq] and ']' not in eqt[open_sq + 1: close_sq]:
+			i += 1
+			close_sq = eqt.index(']', i)
+
 		#: Black magic of recursion. PLEASE NOTE, THIS USES THE SAME
 		#: FUNCTIONALTY AS THE CURLY BRACES SECTION
 		#: Replace the chunk of the list containing the bracketed section
@@ -102,6 +114,12 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 		close_par = eqt.index(')')
 		if verbose:
 			print("\n(")
+
+		#: If nested parenthesis exist, find the outermost closing parenthesis.
+		i = 0
+		while '(' in eqt[open_par + 1: close_par] and ')' not in eqt[open_par + 1: close_par]:
+			i += 1
+			close_par = eqt.index(')', i)
 
 		#: Black magic of recursion. PLEASE NOTE, THIS USES THE SAME
 		#: FUNCTIONALTY AS THE CURLY BRACES SECTION
