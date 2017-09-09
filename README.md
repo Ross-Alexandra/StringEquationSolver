@@ -6,7 +6,7 @@ usage: EqtSolver.py [-h] [-v] Equation
 Command line equation solver
 
 positional arguments:
-  Equation       The equation that should be solved.
+  Equation       The equation that should be solved. Type = str.
 
 optional arguments:
   -h, --help     show this help message and exit
