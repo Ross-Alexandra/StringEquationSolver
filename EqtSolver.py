@@ -291,6 +291,10 @@ def bedmasify(eqt: list, verbose:bool, nested_level: int=0) -> list:
 		#: outcome of the addition/subtraction expression.
 		eqt[first_pos:second_pos + 1] = [eval]
 
+	if verbose:
+		for i in range(nested_level):
+			print('\t', end='')
+		print(eqt[0])
 	return eqt[0]  #: Return the outcome of the equation.
 
 def equationify(eqt: str):
@@ -431,4 +435,7 @@ if __name__ == "__main__":  #: Allow this code to be used outside of just the co
 
 	#: Print the result of the passed equation. If the verbose argument was given,
 	#: output each step of the computing process.
-	print(SolveEqt(args.Equation, args.verbose))
+	if args.verbose:
+		SolveEqt(args.Equation, args.verbose)
+	else:
+		print(SolveEqt(args.Equation))
