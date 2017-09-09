@@ -13,16 +13,38 @@ def find_operation(eqt: str):
 	return None
 
 def bedmasify(eqt: list, verbose:bool) -> list:
+	while '{' in eqt:
+		if verbose:
+			print_eqt(eqt)
+		open_cur = eqt.index('{')
+		close_cur = eqt.index('}')
+		if verbose:
+			print('\n{')
+		eqt[open_cur: close_cur + 1] = [bedmasify(eqt[open_cur + 1: close_cur], verbose)]
+		if verbose:
+			print('}\n')
+
+	while '[' in eqt:
+		if verbose:
+			print_eqt(eqt)
+		open_sq = eqt.index('[')
+		close_sq = eqt.index(']')
+		if verbose:
+			print("\n[")
+		eqt[open_sq: close_sq + 1] = [bedmasify(eqt[open_sq + 1: close_sq], verbose)]
+		if verbose:
+			print(']\n')
+
 	while '(' in eqt:
 		if verbose:
 			print_eqt(eqt)
 		open_par = eqt.index('(')
 		close_par = eqt.index(')')
 		if verbose:
-			print("\nWithin Brackets-------------------------------------------------")
+			print("\n(")
 		eqt[open_par: close_par + 1] = [bedmasify(eqt[open_par + 1: close_par], verbose)]
 		if verbose:
-			print("Exiting Brackets------------------------------------------------\n")
+			print(")\n")
 
 	while '^' in eqt:
 		if verbose:
@@ -102,7 +124,10 @@ def equationify(eqt: str):
 	proper = ""
 	symbol = True
 	eqt = "".join(eqt.split())
-	operations = ['+', '-', '*', 'x', 'X', '/', '^', '(', ')']
+	brackets = ['(', ')', '[', ']', '{', '}']
+	operations = ['+', '-', '*', 'x', 'X', '/', '^']
+	for type in brackets:
+		operations.append(type)
 	for index, character in enumerate(eqt):
 		if character.isdigit():
 			if symbol:
@@ -110,7 +135,7 @@ def equationify(eqt: str):
 			proper += character
 		elif character in operations:
 			if not symbol:
-				if character != ')':
+				if character != ')' and character != ']' and character != '}':
 					symbol = True
 				if 'x' == character.lower():
 					proper += "*"
@@ -118,11 +143,8 @@ def equationify(eqt: str):
 					proper += character
 			elif character == '-':
 				proper += ':' #: ':' is being used to signify a negative value.
-			elif character == '(' or character == ')':
+			elif character in brackets:
 				proper += character
-
-	if '(' in proper and ')' not in proper:
-		proper += ')'
 
 	eqt = []
 	builder = ""
