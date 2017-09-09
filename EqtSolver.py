@@ -285,7 +285,7 @@ def equationify(eqt: str):
 	#:
 	for index, character in enumerate(eqt):
 
-		if character.isdigit():  #: If this character is a digit
+		if character.isdigit() or character == '.':  #: If this character is a digit or a decimal point for a number.
 			if symbol:  #: then, if the previous character was a symbol
 				symbol = False #: then set symbol to false.
 			proper += character  #: And finally append the character to proper.
@@ -301,6 +301,7 @@ def equationify(eqt: str):
 				#: If the character is an x or X, append a multiplication symbol.
 				if 'x' == character.lower():
 					proper += "*"
+
 				#: Otherwise, append the operation's character to the proper string.
 				else:
 					proper += character
