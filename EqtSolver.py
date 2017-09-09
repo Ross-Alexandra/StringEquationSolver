@@ -1,10 +1,10 @@
 from sys import argv
 from math import pow
 
-def SolveEqt(eqt:str):
+def SolveEqt(eqt:str) -> float:
 	eqt = equationify(eqt)
-	eqt = bedmasify(eqt)
-	print(eqt)
+	outcome = bedmasify(eqt)
+	return outcome
 
 def find_operation(eqt: str):
 	for character in eqt:
@@ -14,12 +14,14 @@ def find_operation(eqt: str):
 
 def bedmasify(eqt: list) -> list:
 	while '(' in eqt:
+		print(eqt)
 		open_par = eqt.index('(')
 		close_par = eqt.index(')')
 
-		eqt[open_par: close_par + 1] = bedmasify(eqt[open_par + 1: close_par])
-	print(eqt)
+		eqt[open_par: close_par + 1] = [bedmasify(eqt[open_par + 1: close_par])]
+
 	while '^' in eqt:
+		print(eqt)
 		hat = eqt.index('^')
 		base_pos = hat - 1
 		exp_pos = hat + 1
@@ -27,12 +29,10 @@ def bedmasify(eqt: list) -> list:
 		exponent = float(eqt[exp_pos])
 		eval = pow(int(base), int(exponent))
 
-		print(base_pos, hat, exp_pos, sep=' ')
-
 		eqt[base_pos: exp_pos + 1] = [eval]
-	print(eqt)
 
 	while '*' in eqt or '/' in eqt:
+		print(eqt)
 		try:
 			mul = eqt.index('*')
 		except ValueError:
@@ -50,8 +50,6 @@ def bedmasify(eqt: list) -> list:
 		first_pos = sym_position - 1
 		second_pos = sym_position + 1
 
-		print(first_pos, second_pos, sep=' ')
-
 		first = float(eqt[first_pos])
 		second = float(eqt[second_pos])
 
@@ -61,7 +59,38 @@ def bedmasify(eqt: list) -> list:
 			eval = first / second
 
 		eqt[first_pos:second_pos + 1] = [eval]
+
+	while '+' in eqt or '-' in eqt:
 		print(eqt)
+		try:
+			add = eqt.index('+')
+		except ValueError:
+			add = len(eqt) + 1
+
+		try:
+			sub = eqt.index('-')
+		except ValueError:
+			sub = len(eqt) + 1
+
+		add = False
+		if add < sub:
+			add = True
+
+		sym_position = min([add, sub])
+		first_pos = sym_position - 1
+		second_pos = sym_position + 1
+
+		first = float(eqt[first_pos])
+		second = float(eqt[second_pos])
+
+		if add:
+			eval = first + second
+		else:
+			eval = first - second
+
+		eqt[first_pos:second_pos + 1] = [eval]
+	print(eqt)
+	return eqt[0]
 
 def equationify(eqt: str):
 	proper = ""
@@ -75,7 +104,8 @@ def equationify(eqt: str):
 			proper += character
 		elif character in operations:
 			if not symbol:
-				symbol = True
+				if character != ')':
+					symbol = True
 				if 'x' == character.lower():
 					proper += "*"
 				else:
@@ -100,10 +130,8 @@ def equationify(eqt: str):
 			builder += '-'
 		else:
 			builder += character
-	eqt.append(builder)
+	if builder != "":
+		eqt.append(builder)
 	return eqt
 
-if argv[1] != "n":
-	SolveEqt(argv[1])
-else:
-	pass
+print(SolveEqt(argv[1]))
