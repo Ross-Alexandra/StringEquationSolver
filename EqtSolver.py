@@ -1,9 +1,9 @@
-from sys import argv
 from math import pow
+import argparse
 
-def SolveEqt(eqt:str) -> float:
+def SolveEqt(eqt:str, verbose: bool=False) -> float:
 	eqt = equationify(eqt)
-	outcome = bedmasify(eqt)
+	outcome = bedmasify(eqt, verbose)
 	return outcome
 
 def find_operation(eqt: str):
@@ -12,16 +12,21 @@ def find_operation(eqt: str):
 			return character
 	return None
 
-def bedmasify(eqt: list) -> list:
+def bedmasify(eqt: list, verbose:bool) -> list:
 	while '(' in eqt:
-		print(eqt)
+		if verbose:
+			print_eqt(eqt)
 		open_par = eqt.index('(')
 		close_par = eqt.index(')')
-
-		eqt[open_par: close_par + 1] = [bedmasify(eqt[open_par + 1: close_par])]
+		if verbose:
+			print("\nWithin Brackets-------------------------------------------------")
+		eqt[open_par: close_par + 1] = [bedmasify(eqt[open_par + 1: close_par], verbose)]
+		if verbose:
+			print("Exiting Brackets------------------------------------------------\n")
 
 	while '^' in eqt:
-		print(eqt)
+		if verbose:
+			print_eqt(eqt)
 		hat = eqt.index('^')
 		base_pos = hat - 1
 		exp_pos = hat + 1
@@ -32,7 +37,8 @@ def bedmasify(eqt: list) -> list:
 		eqt[base_pos: exp_pos + 1] = [eval]
 
 	while '*' in eqt or '/' in eqt:
-		print(eqt)
+		if verbose:
+			print_eqt(eqt)
 		try:
 			mul = eqt.index('*')
 		except ValueError:
@@ -61,7 +67,8 @@ def bedmasify(eqt: list) -> list:
 		eqt[first_pos:second_pos + 1] = [eval]
 
 	while '+' in eqt or '-' in eqt:
-		print(eqt)
+		if verbose:
+			print_eqt(eqt)
 		try:
 			add = eqt.index('+')
 		except ValueError:
@@ -89,7 +96,6 @@ def bedmasify(eqt: list) -> list:
 			eval = first - second
 
 		eqt[first_pos:second_pos + 1] = [eval]
-	print(eqt)
 	return eqt[0]
 
 def equationify(eqt: str):
@@ -134,4 +140,16 @@ def equationify(eqt: str):
 		eqt.append(builder)
 	return eqt
 
-print(SolveEqt(argv[1]))
+def print_eqt(eqt: list):
+	for item in eqt:
+		print(item, end=' ')
+	print()
+
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description="Command line equation solver")
+	parser.add_argument("Equation", type=str, help="The equation that should be solved.")
+	parser.add_argument('-v', "--verbose", action="store_true", help="Output each step of the equation solver.")
+
+	args = parser.parse_args()
+	print(SolveEqt(args.Equation, args.verbose))
