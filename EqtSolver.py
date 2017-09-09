@@ -424,7 +424,7 @@ if __name__ == "__main__":  #: Allow this code to be used outside of just the co
 	parser = argparse.ArgumentParser(description="Command line equation solver")
 
 	#: Create the equation argument.
-	parser.add_argument("Equation", type=str, help="The equation that should be solved.")
+	parser.add_argument("Equation", type=str, help="The equation that should be solved. Type = str")
 
 	#: Create the verbose argument.
 	parser.add_argument('-v', "--verbose", action="store_true",
