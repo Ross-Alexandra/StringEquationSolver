@@ -19,7 +19,7 @@ def SolveEqt(eqt:str, verbose: bool=False) -> float:
 	outcome = bedmasify(eqt, verbose)  #: Get the outcome of the equation
 	return outcome  #: Return the outcome.
 
-def bedmasify(eqt: list, verbose:bool) -> list:
+def bedmasify(eqt: list, verbose:bool, nested_level: int=0) -> list:
 	""" Evaluates the equation based on bedmas/pedmas rules.
 
 	Args:
@@ -34,13 +34,18 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 	#: own seperate equations.
 	while '{' in eqt:
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print_eqt(eqt)
 
 		#: Get the indices of the first opening and closing curl braces.
 		open_cur = eqt.index('{')
 		close_cur = eqt.index('}')
 		if verbose:
-			print('\n{')
+			print()
+			for i in range(nested_level):
+				print("\t", end='')
+			print('{')
 
 		#: If nested parenthesis exist, find the outermost closing curly brace..
 		i = 0
@@ -61,23 +66,31 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 		#:	original list becomes:
 		#:	['1', '+', '6']
 		#: 	which is finally resolved to [7]
-		eqt[open_cur: close_cur + 1] = [bedmasify(eqt[open_cur + 1: close_cur], verbose)]
+		eqt[open_cur: close_cur + 1] = [bedmasify(eqt[open_cur + 1: close_cur], verbose, nested_level + 1)]
 
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print('}\n')
 
 	#: Evalulate all equations within square braces as if they are their own
 	#: Seperate equations.
 	while '[' in eqt:
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print_eqt(eqt)
 
 		#: Get the indices of the first appearing set of opening and
 		#: Square Braces.
 		open_sq = eqt.index('[')
 		close_sq = eqt.index(']')
+
 		if verbose:
-			print("\n[")
+			print()
+			for i in range(nested_level):
+				print("\t", end='')
+			print('[')
 
 		#: If nested square brackets exist, find the outermost closing square bracket.
 		i = 0
@@ -99,21 +112,29 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 		#:	original list becomes:
 		#:	['1', '+', '6']
 		#: 	which is finally resolved to [7]
-		eqt[open_sq: close_sq + 1] = [bedmasify(eqt[open_sq + 1: close_sq], verbose)]
+		eqt[open_sq: close_sq + 1] = [bedmasify(eqt[open_sq + 1: close_sq], verbose, nested_level + 1)]
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print(']\n')
 
 	#: Evaluate all equations within paranthesis as if they are their
 	#: own seperate equations.
 	while '(' in eqt:
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print_eqt(eqt)
 
 		#: Find the first appearance of an opening and closing parenthesis.
 		open_par = eqt.index('(')
 		close_par = eqt.index(')')
+
 		if verbose:
-			print("\n(")
+			print()
+			for i in range(nested_level):
+				print("\t", end='')
+			print('(')
 
 		#: If nested parenthesis exist, find the outermost closing parenthesis.
 		i = 0
@@ -135,13 +156,17 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 		#:	original list becomes:
 		#:	['1', '+', '6']
 		#: 	which is finally resolved to [7]
-		eqt[open_par: close_par + 1] = [bedmasify(eqt[open_par + 1: close_par], verbose)]
+		eqt[open_par: close_par + 1] = [bedmasify(eqt[open_par + 1: close_par], verbose, nested_level + 1)]
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print(")\n")
 
 	#: Evaluate all powers as this comes after brackets/parenthesis in bedmas/pedmas.
 	while '^' in eqt:
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print_eqt(eqt)
 
 		#: Find the index of the first appearance of the power symbol.
@@ -161,6 +186,8 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 	#: as this comes after exponentials in bedmas/pedmas.
 	while '*' in eqt or '/' in eqt:
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print_eqt(eqt)
 		#: Try to find an index for the multiplication symbol. If it isnt found
 		#: Set its position to 1 + the length of the list so that it will be ignored.
@@ -214,6 +241,8 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 	#: as this comes after division and multiplication in bedmas/pedmas.
 	while '+' in eqt or '-' in eqt:
 		if verbose:
+			for i in range(nested_level):
+				print("\t", end='')
 			print_eqt(eqt)
 
 		#: Try to find an index for the addition symbol. If it isnt found
