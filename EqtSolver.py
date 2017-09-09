@@ -133,7 +133,7 @@ def bedmasify(eqt: list, verbose:bool) -> list:
 		exp_pos = hat + 1  #: Get the index for the exponent of the found symbol.
 		base = float(eqt[base_pos])  #: Gets the value of the base.
 		exponent = float(eqt[exp_pos])  #: Gets the value of the exponent.
-		eval = pow(int(base), int(exponent))  #: Evaluates the exponential expression.
+		eval =pow(float(base), float(exponent))  #: Evaluates the exponential expression.
 
 		#: Replace the 'X', '^', 'Y' portion of the list with the
 		#: outcome of the exponential expression.
