@@ -1,4 +1,3 @@
-from math import pow
 import argparse
 
 def SolveEqt(eqt:str, verbose: bool=False) -> float:
@@ -176,7 +175,7 @@ def bedmasify(eqt: list, verbose:bool, nested_level: int=0) -> list:
 		exp_pos = hat + 1  #: Get the index for the exponent of the found symbol.
 		base = float(eqt[base_pos])  #: Gets the value of the base.
 		exponent = float(eqt[exp_pos])  #: Gets the value of the exponent.
-		eval =pow(float(base), float(exponent))  #: Evaluates the exponential expression.
+		eval = float(base) ** float(exponent)  #: Evaluates the exponential expression.
 
 		#: Replace the 'X', '^', 'Y' portion of the list with the
 		#: outcome of the exponential expression.
